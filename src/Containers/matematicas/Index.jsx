@@ -142,6 +142,106 @@ function a11yProps(index) {
 
 export default function Index(props) {
 	const classes = useStyles();
+	const [euler, setEuler] = useState([]);
+  const [iteraciones, guardarIteracion] = useState(0);
+  const [h, guardarH] = useState(0);
+  const [dataChart, setDataChart] = useState([]);
+  var data = {
+    labels: [],
+    series: [
+      { data: [] },
+      { data: [] },
+      { data: [] },
+    ],
+  };
+  const infoiteracion = (e) => {
+    guardarIteracion(e.target.value);
+  };
+  const infoh = (e) => {
+    guardarH(e.target.value);
+  };
+  const { labels, series } = data;
+  
+  var options = {
+    high: 10,
+    axisX: {
+      labelInterpolationFnc: function(value, index) {
+        return index % 2 === 0 ? value : null;
+      }
+    }
+  };
+
+  var type = 'Line';
+
+  
+  const operaciones = () => {
+    var i = 0;
+    var datos = [];
+    var y = 0;
+    var YEuler = 2;
+    var euler = 2;
+    var rungeKutta = 2;
+    var Yn = 2;
+    var SubYn = 0;
+    var eulerM = 0;
+    var k1 = 0;
+    var y2 = 0;
+    var k2 = 0;
+    var y3 = 0;
+    var k3 = 0;
+    var y4 = 0;
+    var k4 = 0;
+	var x1 = 0;
+	var x2 = 0;
+	var x3 = 0;
+	var x4 = 0;
+	var x = 0;
+    //console.log(iterations);
+    for(i=0;i<=iteraciones;i++) {
+      datos[i] = {
+        iteracion: i,
+        x: y,
+        euler: euler,
+        eulerM: Yn,
+        k4: rungeKutta,
+      };
+
+      k1 = Number(rungeKutta) * (x1 - 1);
+      y2 = Number(rungeKutta) + (k1 * h) / 2;
+      k2 = Number(y2) * (x2 - 1);
+      y3 = Number(rungeKutta) + (k2 * h) / 2;
+      k3 = Number(y3) * (x3 - 1);
+      y4 = Number(rungeKutta) + k3 * Number(h);
+      k4 = Number(y4) * (x4 - 1);
+
+      rungeKutta = Number(rungeKutta) + (Number(h) / 6) * (k1 + 2 * k2 + 2 * k3 + k4);
+
+      SubYn = Yn + Number(h) * 1 + Yn;
+      let exp = Number(Yn) * (x - 1);
+      let subExp = Number(SubYn) * (x - 1);
+      let newH = Number(h) / 2;
+
+      eulerM = Yn + newH * (exp + subExp);
+      Yn = eulerM;
+
+      YEuler = Number(euler) * (x - 1);
+      euler = Number(euler) + Number(h) * Number(YEuler);
+
+      labels.push(Number(y).toFixed(2));
+      series[0].data.push(datos[i].euler);
+      series[1].data.push(Number(datos[i].eulerM));
+      series[2].data.push(datos[i].k4);
+
+      y = Number(y) + Number(h);
+    }
+
+    setEuler(datos);
+    setDataChart(data);
+  };
+
+  useEffect(() => {
+    operaciones();
+  }, [iteraciones, h]);
 
 	const theme = createMuiTheme({
 		palette: {
@@ -197,8 +297,10 @@ export default function Index(props) {
 						
 							<form noValidate autoComplete="off">
 								
-								<TextField id="filled-basic" label="Valor de Entrada (h)" variant="filled" className={classes.campo} />
-								<TextField id="filled-basic" label="Número de Interaciones" variant="filled" className={classes.campo} />
+								<TextField id="filled-basic" label="Valor de Entrada (h)" 
+        						onChange={(e) => infoh(e)} variant="filled" className={classes.campo} />
+								<TextField id="filled-basic" label="Número de Interaciones"
+								onChange={(e) => infoiteracion(e)} variant="filled" className={classes.campo} />
 							
 							
 							</form>
@@ -227,11 +329,15 @@ export default function Index(props) {
 											</Tabs>
 										</ThemeProvider>
 									</AppBar>
+
 									<TabPanel value={value} index={0} dir={theme.direction}>
-										<Interaciones />
+										<Interaciones euler={euler} />
 									</TabPanel>
+
 									<TabPanel value={value} index={1} dir={theme.direction}>
-										<Grafica />
+										<Grafica dataChart={dataChart}
+										options={options}
+										type={type} />
 									</TabPanel>
 									
 								</div>

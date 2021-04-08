@@ -10,6 +10,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import { Button, Tooltip } from '@material-ui/core';
+import ChartistGraph from 'react-chartist';
 
 const useStyles = makeStyles((theme) => ({
 
@@ -67,20 +68,14 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function Grafica() {
+function Grafica(props) {
     const classes = useStyles();
+    const {dataChart, options, type} = props;
 
     return (
         <Fragment>
             <TableContainer>
-                <Table>
-                    <TableHead>
-                        
-                    </TableHead>
-                    <TableBody>
-                        
-                    </TableBody>
-                </Table>
+            <ChartistGraph data={dataChart} options={options} type={type} />
             </TableContainer>
         </Fragment>
     );

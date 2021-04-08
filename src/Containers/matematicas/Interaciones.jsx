@@ -90,30 +90,9 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Interaciones() {
+function Interaciones(props) {
     const classes = useStyles();
-    const { register, handleSubmit, errors } = useForm();
-    const [open, setOpen] = React.useState(false);
-    
-    const handleOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
-    {/**Este es para abrir el modal de agregar cliente */ }
-    const [openaddClient, setOpenaddClient] = useState(false);
-
-    const handleOpenaddClient = () => {
-        setOpenaddClient(true);
-    };
-
-    const handleCloseaddClient = () => {
-        setOpenaddClient(false);
-    };
-    const onSubmit = (data, e) => {
-        e.preventDefault();
-    };
+    const {euler} = props;
     return (
         <Fragment>
             <TableContainer>
@@ -128,14 +107,16 @@ function Interaciones() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
+                    {euler.map((euler) => (
                         <TableRow>
-                            <TableCell align="center"  >--</TableCell>
-                            <TableCell align="center"  >--</TableCell>
-                            <TableCell align="center"  >--</TableCell>
-                            <TableCell align="center"  >--</TableCell>
-                            <TableCell align="center"  >--</TableCell>
-                            
+                            <TableCell align="center"  >{euler.iteracion}</TableCell>
+                            <TableCell align="center"  >{euler.x}</TableCell>
+                            <TableCell align="center"  >{euler.euler}</TableCell>
+                            <TableCell align="center"  >{euler.eulerM}</TableCell>
+                            <TableCell align="center"  >{euler.k4}</TableCell>
                         </TableRow>
+                    ))}
+
                     </TableBody>
                 </Table>
             </TableContainer>
