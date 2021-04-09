@@ -196,6 +196,8 @@ export default function Index(props) {
 	var x3 = 0;
 	var x4 = 0;
 	var x = 0;
+	var Xn = 0;
+	var SubXn = 0;
     //console.log(iterations);
     for(i=0;i<=iteraciones;i++) {
       datos[i] = {
@@ -207,25 +209,31 @@ export default function Index(props) {
       };
 
       k1 = Number(rungeKutta) * (x1 - 1);
+      x2 = Number(x1) + Number(h) / 2;
       y2 = Number(rungeKutta) + (k1 * h) / 2;
       k2 = Number(y2) * (x2 - 1);
+      x3 = Number(x1) + Number(h) / 2;
       y3 = Number(rungeKutta) + (k2 * h) / 2;
       k3 = Number(y3) * (x3 - 1);
+      x4 = Number(x1) + Number(h);
       y4 = Number(rungeKutta) + k3 * Number(h);
       k4 = Number(y4) * (x4 - 1);
 
       rungeKutta = Number(rungeKutta) + (Number(h) / 6) * (k1 + 2 * k2 + 2 * k3 + k4);
 
-      SubYn = Yn + Number(h) * 1 + Yn;
-      let exp = Number(Yn) * (x - 1);
-      let subExp = Number(SubYn) * (x - 1);
+      SubYn = Yn + Number(h) * (Number(Yn) * (Xn - 1));
+      SubXn = Xn + h;
+      let exp = Number(Yn) * (Xn - 1);
+      let subExp = Number(SubYn) * (SubXn - 1);
       let newH = Number(h) / 2;
 
       eulerM = Yn + newH * (exp + subExp);
       Yn = eulerM;
+      Xn = SubXn;
 
       YEuler = Number(euler) * (x - 1);
       euler = Number(euler) + Number(h) * Number(YEuler);
+	  x += Number(h);
 
       labels.push(Number(y).toFixed(2));
       series[0].data.push(datos[i].euler);
