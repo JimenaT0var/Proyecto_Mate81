@@ -16,7 +16,7 @@ import AppBar from '@material-ui/core/AppBar';
 
 /**Importar Componentes Tablas */
 import Interaciones from './Interaciones';
-import Grafica from './Grafica';
+import Excel from './Excel';
 
 import { useForm } from 'react-hook-form';
 
@@ -145,22 +145,13 @@ export default function Index(props) {
 	const [euler, setEuler] = useState([]);
   const [iteraciones, guardarIteracion] = useState(0);
   const [h, guardarH] = useState(0);
-  const [dataChart, setDataChart] = useState([]);
-  var data = {
-    labels: [],
-    series: [
-      { data: [] },
-      { data: [] },
-      { data: [] },
-    ],
-  };
+
   const infoiteracion = (e) => {
     guardarIteracion(e.target.value);
   };
   const infoh = (e) => {
     guardarH(e.target.value);
   };
-  const { labels, series } = data;
   
   var options = {
     high: 10,
@@ -235,16 +226,10 @@ export default function Index(props) {
       euler = Number(euler) + Number(h) * Number(YEuler);
 	  x += Number(h);
 
-      labels.push(Number(y).toFixed(2));
-      series[0].data.push(datos[i].euler);
-      series[1].data.push(Number(datos[i].eulerM));
-      series[2].data.push(datos[i].k4);
-
       y = Number(y) + Number(h);
     }
 
     setEuler(datos);
-    setDataChart(data);
   };
 
   useEffect(() => {
@@ -310,7 +295,7 @@ export default function Index(props) {
 								<TextField id="filled-basic" label="Número de Interaciones"
 								onChange={(e) => infoiteracion(e)} variant="filled" className={classes.campo} />
 							
-							
+							<Excel euler={euler} />
 							</form>
 				
 								<div className={classes.rootTab}>
@@ -329,23 +314,12 @@ export default function Index(props) {
 													{...a11yProps(0)}
 													style={{ background: '#009688' }}
 												/>
-												<Tab
-													label="GRÁFICA"
-													{...a11yProps(1)}
-													style={{ background: '#009688' }}
-												/>
 											</Tabs>
 										</ThemeProvider>
 									</AppBar>
 
 									<TabPanel value={value} index={0} dir={theme.direction}>
 										<Interaciones euler={euler} />
-									</TabPanel>
-
-									<TabPanel value={value} index={1} dir={theme.direction}>
-										<Grafica dataChart={dataChart}
-										options={options}
-										type={type} />
 									</TabPanel>
 									
 								</div>
