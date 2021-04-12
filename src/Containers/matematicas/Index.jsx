@@ -169,7 +169,7 @@ export default function Index(props) {
     var i = 0;
     var datos = [];
     var y = 0;
-    var YEuler = 2;
+    var YEuler = 0;
     var euler = 2;
     var rungeKutta = 2;
     var Yn = 2;
@@ -192,18 +192,18 @@ export default function Index(props) {
     //console.log(iterations);
     for(i=0;i<=iteraciones;i++) {
       datos[i] = {
-        iteracion: i,
-        x: y,
+        iteracion: i + 1,
+        x: x,
         euler: euler,
         eulerM: Yn,
         k4: rungeKutta,
       };
 
       k1 = Number(rungeKutta) * (x1 - 1);
-      x2 = Number(x1) + Number(h) / 2;
+      x2 = Number(x1) + (h / 2);
       y2 = Number(rungeKutta) + (k1 * h) / 2;
       k2 = Number(y2) * (x2 - 1);
-      x3 = Number(x1) + Number(h) / 2;
+      x3 = Number(x1) + (h / 2);
       y3 = Number(rungeKutta) + (k2 * h) / 2;
       k3 = Number(y3) * (x3 - 1);
       x4 = Number(x1) + Number(h);
@@ -211,22 +211,20 @@ export default function Index(props) {
       k4 = Number(y4) * (x4 - 1);
 
       rungeKutta = Number(rungeKutta) + (Number(h) / 6) * (k1 + 2 * k2 + 2 * k3 + k4);
+	  x1 = Number(x1) + Number(h);
 
-      SubYn = Yn + Number(h) * (Number(Yn) * (Xn - 1));
-      SubXn = Xn + h;
+      SubYn = Number(Yn) + Number(h) * (Yn * (Xn - 1));
+      SubXn = Number(Xn) + Number(h);
       let exp = Number(Yn) * (Xn - 1);
       let subExp = Number(SubYn) * (SubXn - 1);
       let newH = Number(h) / 2;
-
       eulerM = Yn + newH * (exp + subExp);
       Yn = eulerM;
       Xn = SubXn;
 
       YEuler = Number(euler) * (x - 1);
-      euler = Number(euler) + Number(h) * Number(YEuler);
 	  x += Number(h);
-
-      y = Number(y) + Number(h);
+      euler = Number(euler) + Number(h) * Number(YEuler);
     }
 
     setEuler(datos);
